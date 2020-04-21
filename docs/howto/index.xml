@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Howtos on dev.han</title>
+    <link>https://dev.han.beer/howto/</link>
+    <description>Recent content in Howtos on dev.han</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>ko-kr</language>
+    <lastBuildDate>Sun, 19 Jan 2020 23:44:05 +0900</lastBuildDate>
+    
+	<atom:link href="https://dev.han.beer/howto/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Deploy A React App With Firebase Hosting and Github Actions</title>
+      <link>https://dev.han.beer/howto/deploy-a-react-app-with-firebase-hosting-and-github-actions/</link>
+      <pubDate>Sun, 19 Jan 2020 23:44:05 +0900</pubDate>
+      
+      <guid>https://dev.han.beer/howto/deploy-a-react-app-with-firebase-hosting-and-github-actions/</guid>
+      <description>이 포스트에서는 React를 이용해 만든 웹앱을 Firebase Hosting를 이용해 배포하고, 이 과정을 GitHub Actions를 이용해 자동화하는 방법을 설명합니다.
+전체 과정을 간단히 요약하면 아래와 같습니다.
+ Firebase Hosting 프로젝트 설정 React 프로젝트 생성 Firebase Hosting 프로젝트에 React 프로젝트 통합 GitHub Actions 설정 테스트  저는 React 앱 설정에 비해 Firebase Hosting 설정이 익숙하지 않아서 Firebase Hosting 프로젝트에 create-react-app으로 생성한 React 앱을 포함시키는 방법을 사용했습니다.
+하지만 React는 개발 프레임워크가 아닌 자바스크립트 라이브러리이기 때문에 훨씬 유연한 방식으로 적용할 수 있습니다.</description>
+    </item>
+    
+  </channel>
+</rss>

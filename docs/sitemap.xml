@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+  xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  
+  <url>
+    <loc>https://dev.han.beer/tags/continuous-delivery/</loc>
+    <lastmod>2020-01-19T23:44:05+09:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://dev.han.beer/tags/continuous-integration/</loc>
+    <lastmod>2020-01-19T23:44:05+09:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://dev.han.beer/howto/deploy-a-react-app-with-firebase-hosting-and-github-actions/</loc>
+    <lastmod>2020-01-19T23:44:05+09:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://dev.han.beer/</loc>
+    <lastmod>2020-01-19T23:44:05+09:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://dev.han.beer/tags/firebase/</loc>
+    <lastmod>2020-01-19T23:44:05+09:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://dev.han.beer/tags/firebase-hosting/</loc>
+    <lastmod>2020-01-19T23:44:05+09:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://dev.han.beer/tags/github/</loc>
+    <lastmod>2020-01-19T23:44:05+09:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://dev.han.beer/tags/github-actions/</loc>
+    <lastmod>2020-01-19T23:44:05+09:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://dev.han.beer/howto/</loc>
+    <lastmod>2020-01-19T23:44:05+09:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://dev.han.beer/tags/react/</loc>
+    <lastmod>2020-01-19T23:44:05+09:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://dev.han.beer/tags/</loc>
+    <lastmod>2020-01-19T23:44:05+09:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://dev.han.beer/categories/</loc>
+  </url>
+  
+</urlset>

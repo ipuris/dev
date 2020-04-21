@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="ko-kr">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    
+    <title>dev.han  | Deploy A React App With Firebase Hosting and Github Actions</title>
+    <meta name="viewport" content="width=device-width,minimum-scale=1">
+    <meta name="generator" content="Hugo 0.62.2" />
+    
+    
+      <META NAME="ROBOTS" CONTENT="NOINDEX, NOFOLLOW">
+    
+
+    
+    
+      <link href="/dist/css/app.3f5912c237ddd38c8e76debe081c7ca7.css" rel="stylesheet">
+    
+
+    
+
+    
+      
+    
+
+    
+    
+    <meta property="og:title" content="Deploy A React App With Firebase Hosting and Github Actions" />
+<meta property="og:description" content="이 포스트에서는 React를 이용해 만든 웹앱을 Firebase Hosting를 이용해 배포하고, 이 과정을 GitHub Actions를 이용해 자동화하는 방법을 설명합니다.
+전체 과정을 간단히 요약하면 아래와 같습니다.
+ Firebase Hosting 프로젝트 설정 React 프로젝트 생성 Firebase Hosting 프로젝트에 React 프로젝트 통합 GitHub Actions 설정 테스트  저는 React 앱 설정에 비해 Firebase Hosting 설정이 익숙하지 않아서 Firebase Hosting 프로젝트에 create-react-app으로 생성한 React 앱을 포함시키는 방법을 사용했습니다.
+하지만 React는 개발 프레임워크가 아닌 자바스크립트 라이브러리이기 때문에 훨씬 유연한 방식으로 적용할 수 있습니다." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://dev.han.beer/howto/deploy-a-react-app-with-firebase-hosting-and-github-actions/" />
+<meta property="article:published_time" content="2020-01-19T23:44:05+09:00" />
+<meta property="article:modified_time" content="2020-01-19T23:44:05+09:00" />
+<meta itemprop="name" content="Deploy A React App With Firebase Hosting and Github Actions">
+<meta itemprop="description" content="이 포스트에서는 React를 이용해 만든 웹앱을 Firebase Hosting를 이용해 배포하고, 이 과정을 GitHub Actions를 이용해 자동화하는 방법을 설명합니다.
+전체 과정을 간단히 요약하면 아래와 같습니다.
+ Firebase Hosting 프로젝트 설정 React 프로젝트 생성 Firebase Hosting 프로젝트에 React 프로젝트 통합 GitHub Actions 설정 테스트  저는 React 앱 설정에 비해 Firebase Hosting 설정이 익숙하지 않아서 Firebase Hosting 프로젝트에 create-react-app으로 생성한 React 앱을 포함시키는 방법을 사용했습니다.
+하지만 React는 개발 프레임워크가 아닌 자바스크립트 라이브러리이기 때문에 훨씬 유연한 방식으로 적용할 수 있습니다.">
+<meta itemprop="datePublished" content="2020-01-19T23:44:05&#43;09:00" />
+<meta itemprop="dateModified" content="2020-01-19T23:44:05&#43;09:00" />
+<meta itemprop="wordCount" content="1094">
+
+
+
+<meta itemprop="keywords" content="Firebase,Firebase Hosting,GitHub,GitHub Actions,React,Continuous Integration,Continuous Delivery," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Deploy A React App With Firebase Hosting and Github Actions"/>
+<meta name="twitter:description" content="이 포스트에서는 React를 이용해 만든 웹앱을 Firebase Hosting를 이용해 배포하고, 이 과정을 GitHub Actions를 이용해 자동화하는 방법을 설명합니다.
+전체 과정을 간단히 요약하면 아래와 같습니다.
+ Firebase Hosting 프로젝트 설정 React 프로젝트 생성 Firebase Hosting 프로젝트에 React 프로젝트 통합 GitHub Actions 설정 테스트  저는 React 앱 설정에 비해 Firebase Hosting 설정이 익숙하지 않아서 Firebase Hosting 프로젝트에 create-react-app으로 생성한 React 앱을 포함시키는 방법을 사용했습니다.
+하지만 React는 개발 프레임워크가 아닌 자바스크립트 라이브러리이기 때문에 훨씬 유연한 방식으로 적용할 수 있습니다."/>
+
+  </head>
+
+  <body class="ma0 avenir bg-near-white">
+
+    
+   
+  
+
+  <header>
+    <div class="bg-black">
+      <nav class="pv3 ph3 ph4-ns" role="navigation">
+  <div class="flex-l justify-between items-center center">
+    <a href="https://dev.han.beer/" class="f3 fw2 hover-white no-underline white-90 dib">
+      dev.han
+    </a>
+    <div class="flex-l items-center">
+      
+
+      
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+    </div>
+  </div>
+</nav>
+
+    </div>
+  </header>
+
+
+
+    <main class="pb7" role="main">
+      
+  
+  <article class="flex-l flex-wrap justify-between mw8 center ph3">
+
+    <header class="mt4 w-100">
+      <p class="f6 b helvetica tracked">
+          
+        HOWTOS
+      </p>
+      <h1 class="f1 athelas mb1">Deploy A React App With Firebase Hosting and Github Actions</h1>
+      
+      
+      <time class="f6 mv4 dib tracked" datetime="2020-01-19T23:44:05&#43;09:00">January 19, 2020</time>
+      
+      
+    </header>
+
+    <section class="nested-copy-line-height lh-copy serif f4 nested-links nested-img mid-gray pr4-l w-two-thirds-l"><p>이 포스트에서는 React를 이용해 만든 웹앱을 Firebase Hosting를 이용해 배포하고, 이 과정을 GitHub Actions를 이용해 자동화하는 방법을 설명합니다.</p>
+<p>전체 과정을 간단히 요약하면 아래와 같습니다.</p>
+<ol>
+<li>Firebase Hosting 프로젝트 설정</li>
+<li>React 프로젝트 생성</li>
+<li>Firebase Hosting 프로젝트에 React 프로젝트 통합</li>
+<li>GitHub Actions 설정</li>
+<li>테스트</li>
+</ol>
+<p>저는 React 앱 설정에 비해 Firebase Hosting 설정이 익숙하지 않아서 Firebase Hosting 프로젝트에 <a href="https://create-react-app.dev">create-react-app</a>으로 생성한 React 앱을 포함시키는 방법을 사용했습니다.</p>
+<p>하지만 React는 개발 프레임워크가 아닌 자바스크립트 라이브러리이기 때문에 훨씬 유연한 방식으로 적용할 수 있습니다. 이미 React에 익숙하신 분들은 <a href="#create-a-react-project">React 프로젝트 생성</a> 및 <a href="#integrate-the-two-projects">Firebase Hosting 프로젝트에 React 프로젝트 통합</a> 과정을 좀 더 쉽고 효과적인 방법으로 대체하실 수 있으실 것 같습니다.</p>
+<p>이 포스트에는 Firebase 서비스 가입과 프로젝트 생성, Firebase Hosting 커스텀 도메인 설정, git 및 GitHub 사용 방법 등 기본적인 내용에 대한 설명은 포함하지 않았습니다.</p>
+<h2 id="configure-hosting-for-firebase-project">Configure Hosting for Firebase Project</h2>
+<p>Firebase Console에 들어가서 Firebase Hosting 서비스를 설정합니다.
+아직 Hosting 서비스를 설정하지 않았다면 아래와 같은 화면이 나옵니다.</p>
+<p><img src="/images/howto/firebase-hosting-console.png" alt="Firebase Hosting Console"></p>
+<p>시작하기 버튼을 누르면 아래와 같은 화면이 나옵니다.</p>
+<p><img src="/images/howto/firebase-hosting-configure.png" alt="Configure Firebase Hosting"></p>
+<p>안내하는 과정을 그대로 따라가면 됩니다.
+간단히 요약하면 아래와 같습니다.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">npm install -g firebase-tools <span style="color:#75715e"># Firebase CLI 설치</span>
+firebase login <span style="color:#75715e"># 구글 로그인</span>
+firebase init <span style="color:#75715e"># 프로젝트 설정</span>
+firebase deploy <span style="color:#75715e"># 웹 앱 배포</span>
+</code></pre></div><p>그러면 최종적으로 Firebase Hosting 프로젝트가 생성됩니다.
+여기서는 <code>firebase-hosting</code> 폴더에 프로젝트가 생성되었다고 가정하겠습니다.
+아래와 같은 파일들이 자동으로 생성됩니다.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">firebase-hosting/
+- .gitignore
+- .firebaserc
+- firebase.json
+- public/
+  - index.html
+  - 404.html
+</code></pre></div><p>왠지 <code>.firebaserc</code> 파일과 <code>firebase.json</code> 파일이 중요해보입니다.
+<code>public</code> 폴더 안에는 <code>index.html</code> 파일도 있네요.
+Apache 등의 웹 서버를 다뤄보신 경험이 있으시다면 이 폴더 구조만 보고도 어떤 식으로 작동하는지 감이 오실 것 같습니다.</p>
+<p>이제 Firebase Hosting 프로젝트가 하나 만들어졌네요.
+저는 이 단계에서 이 저장소를 GitHub에 생성, 푸시해두었습니다.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">git remote add origin https://github.com/사용자아이디/저장소이름.git
+git push -u origin master
+</code></pre></div><h2 id="create-a-react-project">Create A React Project</h2>
+<p>이제 React 프로젝트를 생성합니다.
+저는 <code>create-react-app</code> 명령어를 이용해 TypeScript 템플릿을 포함한 프로젝트를 생성하겠습니다.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">npx create-react-app react-app --template typescript
+</code></pre></div><p>이제 <code>react-app</code> 폴더에 React 프로젝트가 생성되었습니다.</p>
+<p>이 포스팅의 시작부분에서 말씀드린 것처럼 React 사용에 익숙하신 분들은 굳이 이 방식을 따르지 않으셔도 상관없습니다.
+이미 React 사용에 익숙하시다면 위에서 생성한 <code>firebase-hosting</code> 프로젝트에 바로 React 프로젝트를 설정하는 것이 가장 쉽고 빠를 것 같습니다.</p>
+<h2 id="integrate-the-two-projects">Integrate The Two Projects</h2>
+<p>이제 위에서 생성한 두 프로젝트를 합쳐야 합니다.</p>
+<h3 id="put-files-into-one-folder">Put Files Into One Folder</h3>
+<p>먼저 파일들을 한 폴더로 합쳐봅시다.
+저는 Firebase Hosting 프로젝트 설정에 익숙치 않기 때문에, Firebase Hosting 프로젝트 폴더 <code>firebase-hosting</code>는 그대로 둔 채로 React 프로젝트 폴더 <code>react-app</code>의 파일들을 <code>firebase-hosting</code> 폴더로 옮길 것입니다.</p>
+<p>저는 간편하게 아래의 명령어로 프로젝트 폴더 전체를 옮기고 싶습니다.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">mv react-app/* firebase-hosing/
+</code></pre></div><p>바로 위의 명령을 실행해도 되지만, 저는 좀 더 깔끔하게 프로젝트를 옮기기 위해 아래와 같은 작업을 먼저 진행했습니다.</p>
+<ul>
+<li><code>react-app/.git</code> 폴더 삭제</li>
+<li><code>react-app/node_modules</code> 폴더 삭제</li>
+</ul>
+<h3 id="change-default-public-folder">Change Default Public Folder</h3>
+<p>웹 방문자가 Firebase Hosting을 이용해 서비스를 제공 중인 웹사이트에 접속하면, Firebase Hosting은 <code>public</code> 폴더의 내용을 보여주게 됩니다.
+위에서 Firebase Hosting을 처음 설정하고 나면 자동으로 <code>public</code> 폴더가 생성되고, 그 안에 <code>index.html</code> 파일과 <code>404.html</code> 파일이 생성되었던 것이 기억나실 겁니다.
+이 파일들을 이용해 사용자에게 웹페이지를 표시해주는 것 같습니다.</p>
+<p>하지만 <code>create-react-app</code>으로 생성한 React 프로젝트를 빌드하면 <code>build</code> 폴더에 최종적으로 생성된 파일들이 위치하게 됩니다.
+따라서 우리는 Firebase Hosting이 <code>public</code> 폴더가 아닌 <code>build</code> 폴더의 내용을 웹 방문자에게 표시하도록 설정을 수정해줘야 합니다.
+이는 <code>firebase.json</code> 파일에서 <code>&quot;public&quot;</code> 항목을 통해 바꿀 수 있습니다.
+<code>firebase.json</code> 파일을 아래와 같이 수정해줍시다.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-json" data-lang="json">{
+  <span style="color:#f92672">&#34;hosting&#34;</span>: {
+    <span style="color:#f92672">&#34;public&#34;</span>: <span style="color:#e6db74">&#34;build&#34;</span>,
+    <span style="color:#f92672">&#34;ignore&#34;</span>: [
+      <span style="color:#e6db74">&#34;firebase.json&#34;</span>,
+      <span style="color:#e6db74">&#34;**/.*&#34;</span>,
+      <span style="color:#e6db74">&#34;**/node_modules/**&#34;</span>
+    ]
+  }
+}
+</code></pre></div><p><code>build</code> 폴더의 내용은 git을 이용해 버전관리가 될 필요가 없기 때문에 <code>.gitignore</code>에도 추가해주는게 좋을 것 같습니다.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh"><span style="color:#75715e"># 아래의 라인을 기존 .gitignore 파일에 추가</span>
+
+<span style="color:#75715e"># production</span>
+/build
+</code></pre></div><p>이제 Firebase Hosting 프로젝트와 React 프로젝트가 성공적으로 합쳐졌습니다.
+React가 정상적으로 작동하는지 확인해봅시다.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">npm install
+npm start
+</code></pre></div><p>빌드도 문제없이 진행되어 <code>build</code> 폴더에 파일들이 생성되는지 확인해봅시다.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">npm run build
+</code></pre></div><h2 id="github-actions-설정">GitHub Actions 설정</h2>
+<p>위의 단계까지 진행할 경우 아래 명령어로 바로 Firebase Hosting 서비스에 배포를 진행할 수도 있습니다.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">firebase deploy
+</code></pre></div><p>하지만 프로덕션 레벨의 서비스일 경우 아무런 테스트나 확인이 없이 진행되는 이런 방식의 배포는 상당히 불안합니다.
+프로덕션 레벨의 서비스가 아닌 개인적인 토이 프로젝트의 경우에도 git을 이용한 버전 관리 작업과 배포 과정이 분리되어 있어 매번 배포를 신경쓰기 귀찮기도 하고, 실수할 여지가 있어보입니다.</p>
+<p>GitHub Actions를 이용해 <code>master</code> 브랜치에 푸시가 되면 자동으로 React 빌드를 진행하고, 빌드가 성공할 경우 자동으로 Firebase Hosting에 배포를 진행하도록 만들어보겠습니다.</p>
+<p>아래와 같은 두 과정을 거쳐야 합니다.</p>
+<ul>
+<li><code>main.yml</code> 작성</li>
+<li><code>FIREBASE_TOKEN</code> 설정</li>
+</ul>
+<h3 id="add-mainyml">Add main.yml</h3>
+<p>이제 GitHub Actions에서 자동화할 작업의 명세인 워크플로우 파일을 작성해봅시다.
+이 워크플로우 파일은 YAML 파일 형태로 작성하게 됩니다.</p>
+<p>웹브라우저를 이용해 GitHub 서비스에서 현재 작업 중인 프로젝트의 저장소 페이지에 들어가면 Actions 메뉴를 확인하실 수 있습니다.
+눌러봅시다.</p>
+<p><img src="/images/howto/github-actions-menu.png" alt="GitHub Actions menu"></p>
+<p>GitHub Actions에는 이미 다양한 종류의 공식 action (workflow) 들이 존재하고, 이외에도 다른 사람들이 만들어놓은 많은 종류의 action들이 존재합니다.
+그 중에서 마음에 드는 것을 골라 그대로 사용해도 상관없습니다.
+하지만 저는 간단한 작업이니만큼 공부도 할 겸 직접 action을 작성해보았습니다.
+(GitHub Actions 작동 방식과 문법에 대한 내용은 공식 문서를 포함해 이를 자세히 설명한 글이 많기 때문에 생략하도록 하겠습니다.)</p>
+<p>오른쪽 위에 있는 &lsquo;Set up a workflow yourself&rsquo; 버튼을 누릅니다.
+다음은 제가 사용한 워크플로우 파일(<code>main.yml</code>)입니다.
+이대로 설정하시고 커밋해줍시다.
+그러면 <code>.github/workflows/main.yml</code> 파일이 생성됩니다.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml">name: Firebase Hosting Deploy
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@master
+    - name: Build React
+      run: <span style="color:#e6db74">|
+</span><span style="color:#e6db74">       </span><span style="color:#e6db74"> </span><span style="color:#e6db74">npm install</span>
+        npm run build
+    - name: Deploy to Firebase Hosting
+      run: <span style="color:#e6db74">|
+</span><span style="color:#e6db74">       </span><span style="color:#e6db74"> </span><span style="color:#e6db74">sudo npm install -g firebase-tools</span>
+        firebase deploy --token ${{ secrets.FIREBASE_TOKEN }}
+</code></pre></div><p>그런데 마지막에 <code>${{ secrets.FIREBASE_TOKEN }}</code> 은 무엇일까요?</p>
+<h3 id="set-firebase_token">Set FIREBASE_TOKEN</h3>
+<p>Git과 같은 버전 관리 시스템에는 Access Token이나 API 키와 같은 비밀 정보(credentials)는 포함시키지 않아야 합니다.
+Node.js 프로젝트에서는 이를 해결하기 위해 쉘 환경변수를 사용하는 방법, <code>dotenv</code> 등을 이용해 별도의 설정 파일을 사용하는 방법 등을 일반적으로 많이 활용합니다.</p>
+<p>그러면 GitHub Actions에서 credential이 필요할 때는 어떻게 사용할 수 있을까요?
+이를 위해 GitHub에서는 creadential을 별도로 저장해두고, 이를 <code>${{ secrets.이름 }}</code>의 형태로 불러와서 사용할 수 있도록 하고 있습니다.</p>
+<p>여기서도 Firebase CLI에서 <code>firebase deploy</code> 명령을 내리기 위해서는 내가 이 Firebase 프로젝트에 배포 권한이 있다는 것을 증명하기 위한 인증/인가 정보가 필요합니다.
+Firebase는 이를 Access Token을 이용해서 증명할 수 있도록 하고 있습니다.
+먼저 이 Access Token을 얻어봅시다.</p>
+<p>혹시 Firebase CLI가 설치되어 있지 않다면 먼저 아래의 명령어로 설치합니다.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">npm install -g firebase-tools
+</code></pre></div><p>이제 아래 명령어를 입력하면 FIREBASE_TOKEN 값을 얻을 수 있습니다.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">firebase login:ci
+</code></pre></div><p>터미널에 출력되는 값을 복사해 둡니다.</p>
+<p>이제 GitHub 웹사이트에 접속해서 저장소 페이지의 Settings 메뉴에 가면 Secret 항목을 보실 수 있습니다.</p>
+<p><img src="/images/howto/github-actions-menu.png" alt="GitHub Actions"></p>
+<p>이곳에서 &lsquo;Add a new secret'을 선택한 후 Name에는 <code>FIREBASE_TOKEN</code>을, Value에는 아까 복사해두었던 값을 붙여넣어 줍니다.</p>
+<p>이제 git 저장소에는 credential 정보를 포함시키지 않은 상태에서도 우리는 <code>FIREBASE_TOKEN</code> 이라는 이름으로 해당 정보에 접근할 수 있게 되었습니다.</p>
+<h2 id="test">Test</h2>
+<p>다 완료되었습니다!</p>
+<p>이제 우리가 로컬 환경에서 React 앱을 작성한 후 <code>master</code> 브랜치로 푸시를 하면 GitHub Actions가 자동으로 그 파일들을 빌드해서 Firebase Hosting에 배포해줄 겁니다.
+한 번 테스트를 해볼까요?</p>
+<p>저는 <code>creat-react-app</code> 으로 생성된 기본 페이지에서 이상하게 빙빙 돌고 있는 React 로고 이미지를 없애고, 문구를 바꿔 봤습니다.
+첫 문구는 역시 <code>Hello, world!</code>죠.</p>
+<p>이제 커밋을 하고, <code>master</code> 브랜치로 푸시를 해봅시다.
+아, 그 전에 먼저 GitHub 사이트의 저장소 페이지에 접속해 Actions 메뉴에서 우리가 만들었던 <code>Firebase Hosting Deploy</code> 워크플로우 화면을 띄워둡시다.</p>
+<p><img src="/images/howto/firebase-hosting-react-github-actions-proceeding.png" alt="GitHub Actions"></p>
+<p>무언가 막 진행이 되더니&hellip;</p>
+<p><img src="/images/howto/firebase-hosting-react-github-actions-complete.png" alt="GitHub Actions"></p>
+<p>Complete job 이 떴습니다!
+이제 웹사이트를 가보면&hellip;</p>
+<p><img src="/images/howto/firebase-hosting-react-github-actions-hello-world.png" alt="Hello, world!"></p>
+<p>헬로, 월드!</p>
+<h1 id="reference">Reference</h1>
+<ul>
+<li><a href="https://dev.to/gautemeekolsen/getting-started-with-github-actions-ci-cd-firebase-deploy-5g87">https://dev.to/gautemeekolsen/getting-started-with-github-actions-ci-cd-firebase-deploy-5g87</a></li>
+</ul>
+<ul class="pa0">
+  
+   <li class="list">
+     <a href="/tags/firebase" class="link f5 grow no-underline br-pill ba ph3 pv2 mb2 dib black sans-serif">Firebase</a>
+   </li>
+  
+   <li class="list">
+     <a href="/tags/firebase-hosting" class="link f5 grow no-underline br-pill ba ph3 pv2 mb2 dib black sans-serif">Firebase Hosting</a>
+   </li>
+  
+   <li class="list">
+     <a href="/tags/github" class="link f5 grow no-underline br-pill ba ph3 pv2 mb2 dib black sans-serif">GitHub</a>
+   </li>
+  
+   <li class="list">
+     <a href="/tags/github-actions" class="link f5 grow no-underline br-pill ba ph3 pv2 mb2 dib black sans-serif">GitHub Actions</a>
+   </li>
+  
+   <li class="list">
+     <a href="/tags/react" class="link f5 grow no-underline br-pill ba ph3 pv2 mb2 dib black sans-serif">React</a>
+   </li>
+  
+   <li class="list">
+     <a href="/tags/continuous-integration" class="link f5 grow no-underline br-pill ba ph3 pv2 mb2 dib black sans-serif">Continuous Integration</a>
+   </li>
+  
+   <li class="list">
+     <a href="/tags/continuous-delivery" class="link f5 grow no-underline br-pill ba ph3 pv2 mb2 dib black sans-serif">Continuous Delivery</a>
+   </li>
+  
+</ul>
+<div class="mt6">
+      
+      
+      </div>
+    </section>
+
+    <aside class="w-30-l mt6-l">
+
+
+
+
+</aside>
+
+  </article>
+
+    </main>
+    <footer class="bg-black bottom-0 w-100 pa3" role="contentinfo">
+  <div class="flex justify-between">
+  <a class="f4 fw4 hover-white no-underline white-70 dn dib-ns pv2 ph3" href="https://dev.han.beer/" >
+    &copy;  dev.han 2020 
+  </a>
+    <div>
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+  </div>
+</footer>
+
+    
+
+  <script src="/dist/js/app.3fc0f988d21662902933.js"></script>
+
+
+  </body>
+</html>

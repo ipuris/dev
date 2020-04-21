@@ -1,4 +1,4 @@
-baseURL = "https://dev.han.beer/"
+baseURL = "https://dev.hanpark.im/"
 languageCode = "ko-kr"
 title = "dev.han"
 theme = "ananke"

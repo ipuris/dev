@@ -1,0 +1,4 @@
+baseURL = 'https://han.beer/'
+languageCode = 'en-us'
+title = 'Han'
+theme = 'paper'

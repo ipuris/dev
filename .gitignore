@@ -2,7 +2,7 @@
 .DS_Store
 Thumbs.db
 
-# Build
+# Temporary lock file while building
 .hugo_build.lock
 
 # Export
